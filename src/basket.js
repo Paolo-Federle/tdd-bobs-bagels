@@ -41,6 +41,27 @@ class Basket {
         }
     }
 
+    checkForDouble() {
+        const duplicates = this.items.filter((item, index) => this.items.indexOf(item) !== index)
+        // console.log(duplicates)
+        return duplicates[0]
+    }
+
+    getPrices() {
+        const prices = this.inventory.map(
+            (({sku, price}) => ({sku, price}))
+        )
+        return prices
+    }
+
+    totalCost(){
+        let total = 0
+        for (let i=0; i< this.items.length; i++){
+            total += Number(this.items[i].price)
+        }
+        return total
+    }
+
 }
 
 module.exports = Basket

@@ -120,7 +120,7 @@ describe('deleteItem', () => {
   })
 
   it('should return false if try to delete something that do not exist in the basket', () => {
-    
+
     expect(newBasket.deleteItem("BGLP")).toBeFalse()
   })
 
@@ -134,17 +134,96 @@ describe('isFull', () => {
   })
 
   it('check empty basket', () => {
-    for (let i = 0; i<5; i++){
+    for (let i = 0; i < 5; i++) {
       newBasket.addItem("BGLP")
-      }
+    }
     expect(newBasket.isFull()).toBeFalse()
   })
 
   it('check full basket', () => {
-    for (let i = 0; i<13; i++){
-    newBasket.addItem("BGLP")
+    for (let i = 0; i < 13; i++) {
+      newBasket.addItem("BGLP")
     }
     expect(newBasket.isFull()).toBeTrue()
   })
 
 })
+
+describe('checkForDouble', () => {
+  let newBasket
+
+  beforeEach(() => {
+    newBasket = new Basket()
+  })
+
+  it('return only double object', () => {
+    newBasket.addItem("BGLP")
+    newBasket.addItem("BGLO")
+    newBasket.addItem("BGLO")
+    expect(newBasket.checkForDouble()).toEqual(
+      {
+        "sku": "BGLO",
+        "price": "0.49",
+        "name": "Bagel",
+        "variant": "Onion"
+      }
+    )
+  })
+
+})
+
+describe('getPrices', () => {
+  let newBasket
+
+  beforeEach(() => {
+    newBasket = new Basket()
+  })
+
+  it('return name and prices for all available product', () => {
+    expect(newBasket.getPrices()).toEqual([
+      {
+        "sku": "BGLO",
+        "price": "0.49"
+      },
+      {
+        "sku": "BGLP",
+        "price": "0.39"
+      }, {
+        "sku": "BGLE",
+        "price": "0.49",
+      },
+      {
+        "sku": "BGLS",
+        "price": "0.49",
+      },
+      {
+        "sku": "COF",
+        "price": "0.99",
+      },
+      {
+        "sku": "BGSE",
+        "price": "2.99",
+      },
+      {
+        "sku": "BGSS",
+        "price": "4.99",
+      }]
+    )
+  })
+})
+
+  describe('totalCost', () => {
+    let newBasket
+
+    beforeEach(() => {
+      newBasket = new Basket()
+    })
+
+    it('return total cost all object in the basket', () => {
+      newBasket.addItem("BGLP")
+      newBasket.addItem("BGLO")
+      newBasket.addItem("BGSS")
+      expect(newBasket.totalCost()).toBe(5.87)
+    })
+
+  })
