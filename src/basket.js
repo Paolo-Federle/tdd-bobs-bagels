@@ -17,11 +17,14 @@ class Basket {
         return false
     }
 
-    addItem(searchedItem) {
+    addItem(searchedItem, addHowMany = 1) {
         const foundItem = this.findItem(searchedItem)
-        if (foundItem && !this.isFull()) {
-            this.items.push(foundItem)
-            return this.items
+        if (foundItem) {
+            for (let i = 0; i < addHowMany; i++) {
+                if (!this.isFull()) {
+                    this.items.push(JSON.parse(JSON.stringify(foundItem)))
+                }
+            } return this.items
         }
         return false
     }
@@ -32,7 +35,7 @@ class Basket {
             return false
         }
         this.items.splice(itemIndex, 1)
-        if (this.findItem(searchedItem)){
+        if (this.findItem(searchedItem)) {
             this.deleteItem(searchedItem)
         }
         return this.items
@@ -46,25 +49,34 @@ class Basket {
         }
     }
 
-    checkForDouble() {
-        const duplicates = this.items.filter((item, index) => this.items.indexOf(item) !== index)
-        // console.log(duplicates)
-        return duplicates[0]
-    }
-
     getPrices() {
         const prices = this.inventory.map(
-            (({sku, price}) => ({sku, price}))
+            (({ sku, price }) => ({ sku, price }))
         )
         return prices
     }
 
-    totalCost(){
+    totalCost() {
         let total = 0
-        for (let i=0; i< this.items.length; i++){
+        console.log(this.items)
+        for (let i = 0; i < this.items.length; i++) {
             total += Number(this.items[i].price)
+            // console.log(total)
         }
         return total
+    }
+
+    inventoryPriceEditItem(skuToEdit, newValue) {
+        const editedItem = this.findItem(skuToEdit).price = newValue
+        return editedItem
+    }
+
+    basketPriceEditItem(skuToEdit, newValue, howManyItems) {
+        for (let i=0; i < howManyItems; i++) {
+            if (this.items[i].sku === skuToEdit){
+                this.items[i].price = newValue
+            }
+        }
     }
 
 }

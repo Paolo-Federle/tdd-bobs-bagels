@@ -151,40 +151,13 @@ describe('isFull', () => {
   })
 
   it('check empty basket', () => {
-    for (let i = 0; i < 5; i++) {
-      newBasket.addItem("BGLP")
-    }
+    newBasket.addItem("BGLP", 5)
     expect(newBasket.isFull()).toBeFalse()
   })
 
   it('check full basket', () => {
-    for (let i = 0; i < 13; i++) {
-      newBasket.addItem("BGLP")
-    }
+    newBasket.addItem("BGLP", 13)
     expect(newBasket.isFull()).toBeTrue()
-  })
-
-})
-
-describe('checkForDouble', () => {
-  let newBasket
-
-  beforeEach(() => {
-    newBasket = new Basket()
-  })
-
-  it('return only double object', () => {
-    newBasket.addItem("BGLP")
-    newBasket.addItem("BGLO")
-    newBasket.addItem("BGLO")
-    expect(newBasket.checkForDouble()).toEqual(
-      {
-        "sku": "BGLO",
-        "price": "0.49",
-        "name": "Bagel",
-        "variant": "Onion"
-      }
-    )
   })
 
 })
@@ -229,18 +202,66 @@ describe('getPrices', () => {
   })
 })
 
-  describe('totalCost', () => {
-    let newBasket
+describe('totalCost', () => {
+  let newBasket
 
-    beforeEach(() => {
-      newBasket = new Basket()
-    })
-
-    it('return total cost all object in the basket', () => {
-      newBasket.addItem("BGLP")
-      newBasket.addItem("BGLO")
-      newBasket.addItem("BGSS")
-      expect(newBasket.totalCost()).toBe(5.87)
-    })
-
+  beforeEach(() => {
+    newBasket = new Basket()
   })
+
+  it('return total cost all object in the basket', () => {
+    newBasket.addItem("BGLP")
+    newBasket.addItem("BGLO")
+    newBasket.addItem("BGSS")
+    expect(newBasket.totalCost()).toBe(5.87)
+  })
+
+})
+
+describe('inventoryPriceEditItem', () => {
+  let newBasket
+
+  beforeEach(() => {
+    newBasket = new Basket()
+  })
+
+  it('return 1.00 as price for BGLP', () => {
+    newBasket.addItem("BGLP")
+    newBasket.inventoryPriceEditItem("BGLP", "1.00")
+    expect(newBasket.inventory[1].price).toEqual("1.00")
+  })
+
+  it('return 1.00 as price for BGLP', () => {
+    newBasket.inventoryPriceEditItem("BGLP", "1.39")
+    newBasket.addItem("BGLP")
+    newBasket.addItem("BGLO")
+    newBasket.addItem("BGSS")
+    expect(newBasket.totalCost()).toBe(6.87)
+  })
+
+})
+
+describe('basketPriceEditItem', () => {
+  let newBasket
+
+  beforeEach(() => {
+    newBasket = new Basket(30)
+  })
+
+  it('return total cost all object in the basket', () => {
+    newBasket.addItem("BGLP", 6)
+    newBasket.basketPriceEditItem("BGLP", "1.00", 3)
+    expect(newBasket.totalCost()).toBe(4.17)
+  })
+
+  it('extension 1, order #1', () => {
+    newBasket.addItem("BGLO", 2)
+    newBasket.addItem("BGLP", 12)
+    newBasket.basketPriceEditItem("BGLP", 0.33, 12)
+    newBasket.addItem("BGLE", 6)
+    newBasket.basketPriceEditItem("BGLE", 0.41, 6)
+    newBasket.addItem("COF", 3)
+    expect(newBasket.totalCost()).toBe(10.43)
+  })
+
+})
