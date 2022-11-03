@@ -124,6 +124,23 @@ describe('deleteItem', () => {
     expect(newBasket.deleteItem("BGLP")).toBeFalse()
   })
 
+  it('should delete all the items with the same name', () => {
+    newBasket.addItem("BGLP")
+    newBasket.addItem("BGLP")
+    newBasket.addItem("BGLE")
+    newBasket.addItem("BGLO")
+    newBasket.deleteItem("BGLP")
+    newBasket.deleteItem("BGLE")
+    expect(newBasket.items).toEqual(
+      [{
+        "sku": "BGLO",
+        "price": "0.49",
+        "name": "Bagel",
+        "variant": "Onion"
+      }]
+    )
+  })
+
 })
 
 describe('isFull', () => {

@@ -1,10 +1,12 @@
 const inventory = require("../inventory.json").inventory
 
+// change/alter?
+
 class Basket {
     constructor(capacity = 10) {
         this.basketCapacity = capacity
         this.items = []
-        this.inventory = inventory
+        this.inventory = JSON.parse(JSON.stringify(inventory))
     }
 
     findItem(searchedItem) {
@@ -30,6 +32,9 @@ class Basket {
             return false
         }
         this.items.splice(itemIndex, 1)
+        if (this.findItem(searchedItem)){
+            this.deleteItem(searchedItem)
+        }
         return this.items
     }
 
