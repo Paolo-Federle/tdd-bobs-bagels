@@ -213,7 +213,7 @@ describe('totalCost', () => {
     newBasket.addItem("BGLP")
     newBasket.addItem("BGLO")
     newBasket.addItem("BGSS")
-    expect(newBasket.totalCost()).toBe(5.87)
+    expect(newBasket.totalCost()).toBe("5.87")
   })
 
 })
@@ -236,7 +236,7 @@ describe('inventoryPriceEditItem', () => {
     newBasket.addItem("BGLP")
     newBasket.addItem("BGLO")
     newBasket.addItem("BGSS")
-    expect(newBasket.totalCost()).toBe(6.87)
+    expect(newBasket.totalCost()).toBe("6.87")
   })
 
 })
@@ -251,17 +251,42 @@ describe('basketPriceEditItem', () => {
   it('return total cost all object in the basket', () => {
     newBasket.addItem("BGLP", 6)
     newBasket.basketPriceEditItem("BGLP", "1.00", 3)
-    expect(newBasket.totalCost()).toBe(4.17)
+    expect(newBasket.totalCost()).toBe("4.17")
+  })
+
+})
+
+describe('extension 1', () => {
+  let newBasket
+
+  beforeEach(() => {
+    newBasket = new Basket(30)
   })
 
   it('extension 1, order #1', () => {
     newBasket.addItem("BGLO", 2)
     newBasket.addItem("BGLP", 12)
-    newBasket.basketPriceEditItem("BGLP", 0.33, 12)
     newBasket.addItem("BGLE", 6)
-    newBasket.basketPriceEditItem("BGLE", 0.41, 6)
     newBasket.addItem("COF", 3)
-    expect(newBasket.totalCost()).toBe(10.43)
+    expect(newBasket.totalCost("special")).toBe("10.43")
+  })
+  
+  it('extension 1, order #2', () => {
+    newBasket.addItem("BGLP", 16)
+    expect(newBasket.totalCost("special")).toBe("5.52")
+  })
+  
+  it('extension 1, order #personalized, 14 BGLP and 3 COF', () => {
+    newBasket.addItem("BGLP", 14)
+    newBasket.addItem("COF", 3)
+    expect(newBasket.totalCost("special")).toBe("7.45")
+  })
+  
+  it('extension 1, order #personalized, 17 BGLP and 4 COF', () => {
+    newBasket.addItem("BGLP", 17)
+    newBasket.addItem("COF", 4)
+    expect(newBasket.totalCost("special")).toBe("9.35")
   })
 
 })
+

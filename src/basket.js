@@ -56,14 +56,16 @@ class Basket {
         return prices
     }
 
-    totalCost() {
+    totalCost(special = false) {
         let total = 0
-        console.log(this.items)
+        if (special) {
+            this.specialOffer()
+        }
         for (let i = 0; i < this.items.length; i++) {
             total += Number(this.items[i].price)
             // console.log(total)
         }
-        return total
+        return total.toFixed(2)
     }
 
     inventoryPriceEditItem(skuToEdit, newValue) {
@@ -72,9 +74,42 @@ class Basket {
     }
 
     basketPriceEditItem(skuToEdit, newValue, howManyItems) {
-        for (let i=0; i < howManyItems; i++) {
-            if (this.items[i].sku === skuToEdit){
+        let itemEdited = 0
+        for (let i = 0; i < this.items.length; i++) {
+            if (itemEdited === howManyItems) {
+                return
+            }
+            if (this.items[i].sku === skuToEdit) {
                 this.items[i].price = newValue
+                itemEdited++
+            }
+        }
+    }
+
+    specialOffer() {
+        const bgloOffer = Math.floor((this.items.filter(obj => obj.sku === "BGLO").length) / 6)
+        for (let i = 0; i < bgloOffer; i++) {
+            this.basketPriceEditItem("BGLO", `${(2.49 / 6).toFixed(2)}`, 6)
+        }
+        const bglpOffer = Math.floor((this.items.filter(obj => obj.sku === "BGLP").length) / 12)
+
+        for (let i = 0; i < bglpOffer; i++) {
+            this.basketPriceEditItem("BGLP", `${(3.99 / 12).toFixed(2)}`, 12)
+        }
+        const bgleOffer = Math.floor((this.items.filter(obj => obj.sku === "BGLP").length) / 12)
+        for (let i = 0; i < bglpOffer; i++) {
+            this.basketPriceEditItem("BGLE", `${(2.49 / 6).toFixed(2)}`, 6)
+        }
+        const bgplRemainder = this.items.filter(obj => obj.sku === "BGLP").length % 12
+        const howManyCoffee = this.items.filter(obj => obj.sku === "COF").length
+        if (bgplRemainder !== 0 & howManyCoffee > 0) {
+            const lesserBetweenBagelCoffee = Math.min(bgplRemainder, howManyCoffee)
+            const filteredItems = this.items.filter(obj => obj.sku === "BGLP")
+            this.basketPriceEditItem("COF", `1.25`, lesserBetweenBagelCoffee)
+
+            for (let i = 0; i < lesserBetweenBagelCoffee; i++) {
+                // console.log(this.items.filter(obj => obj.sku === "BGLP")[i+13])
+                filteredItems[i + (bglpOffer * 12)].price = "0.00"
             }
         }
     }
